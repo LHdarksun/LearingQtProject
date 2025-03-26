@@ -1,0 +1,5 @@
+mainwindow.cpp:
+1.cvt_Cv2Qimg():该如何将Mat图像转化为其他更多的QImage支持的图像格式？
+2.warpAffine()
+3.cvFile.clone()（内存管理）
+4.指针的容器

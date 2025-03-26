@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ImageBeautificationSystem</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="ProcFuncWidget">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>20</y>
+      <width>400</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="SimpleGeomTrans">
+     <attribute name="title">
+      <string>简单的几何变换</string>
+     </attribute>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>60</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>旋转：</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>45</y>
+        <width>50</width>
+        <height>12</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>角度：</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="AngleEdit">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>40</y>
+        <width>110</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="LeftRotate">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>40</y>
+        <width>85</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>逆时针旋转15°</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="RightRotate">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>40</y>
+        <width>85</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>顺时针旋转15°</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radBtn_INTER_NEAREST">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>450</y>
+        <width>100</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>最邻近插值</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radBtn_INTER_LINEAR">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>450</y>
+        <width>90</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>双线性插值</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radBtn_INTER_AREA">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>490</y>
+        <width>80</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>区域插值</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radBtn_INTER_CUBIC">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>490</y>
+        <width>90</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>4*4双立方插值</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radBtn_INTER_LANCZOS4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>530</y>
+        <width>100</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>8*8Lanczos插值</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>410</y>
+        <width>120</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>插值方式选择：</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="hzSlider_Rotate">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>360</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>-360</number>
+      </property>
+      <property name="maximum">
+       <number>360</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>60</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>缩放:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>155</y>
+        <width>50</width>
+        <height>12</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>缩放比例:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="ScaleEdit">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>150</y>
+        <width>110</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbtn_ScaleDown">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>150</y>
+        <width>85</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>缩放比例减0.1</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbtn_ScaleUp">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>150</y>
+        <width>85</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>缩放比例加0.1</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="hzSlider_Scale">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>190</y>
+        <width>360</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>230</y>
+        <width>60</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>对称:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbtn_Up_Down_Symmetry">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>265</y>
+        <width>80</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X轴对称</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbtn_Left_Right_Symmetry">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>295</y>
+        <width>80</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Y轴对称</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbtn_Origin_Symmetry">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>325</y>
+        <width>80</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>原点对称</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbtn_Restore_Symmetry">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>380</y>
+        <width>100</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <italic>false</italic>
+        <bold>true</bold>
+        <underline>false</underline>
+       </font>
+      </property>
+      <property name="text">
+       <string>还原</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>页</string>
+     </attribute>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="ImgBasicInfo">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>500</y>
+      <width>600</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>图像信息</string>
+    </property>
+    <widget class="QLabel" name="editImg_Format">
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>20</y>
+       <width>200</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>20</y>
+       <width>40</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>格式：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="editImg_Depth">
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>40</y>
+       <width>100</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>40</y>
+       <width>40</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>深度：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>60</y>
+       <width>40</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>位平面：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="editImg_BitPlane">
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>60</y>
+       <width>100</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="chkBox_Alpha">
+     <property name="geometry">
+      <rect>
+       <x>265</x>
+       <y>80</y>
+       <width>60</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>透明度</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="chkBox_GrayScale">
+     <property name="geometry">
+      <rect>
+       <x>385</x>
+       <y>80</y>
+       <width>60</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>灰度</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>80</y>
+       <width>20</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>高：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="editImg_Height">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>80</y>
+       <width>100</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>145</x>
+       <y>80</y>
+       <width>20</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>宽：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="editImg_Width">
+     <property name="geometry">
+      <rect>
+       <x>165</x>
+       <y>80</y>
+       <width>100</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>100</y>
+       <width>55</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>字节大小：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="editImg_SizeByte">
+     <property name="geometry">
+      <rect>
+       <x>65</x>
+       <y>100</y>
+       <width>70</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>145</x>
+       <y>100</y>
+       <width>40</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>分辨率：</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="editImg_DPM">
+     <property name="geometry">
+      <rect>
+       <x>205</x>
+       <y>100</y>
+       <width>200</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="labPic">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>800</width>
+      <height>450</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="File">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="OpenFile"/>
+    <addaction name="RecentFile"/>
+    <addaction name="separator"/>
+    <addaction name="Save"/>
+    <addaction name="SaveCopy"/>
+    <addaction name="separator"/>
+    <addaction name="Reload"/>
+   </widget>
+   <widget class="QMenu" name="Edit">
+    <property name="title">
+     <string>编辑</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="Layer">
+    <property name="title">
+     <string>图层</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="Filter">
+    <property name="title">
+     <string>滤镜</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="Help">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+   </widget>
+   <addaction name="File"/>
+   <addaction name="Edit"/>
+   <addaction name="Layer"/>
+   <addaction name="Filter"/>
+   <addaction name="Help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="OpenFile">
+   <property name="text">
+    <string>打开(O)</string>
+   </property>
+   <property name="toolTip">
+    <string>打开文件</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="RecentFile">
+   <property name="text">
+    <string>最近打开文件</string>
+   </property>
+  </action>
+  <action name="Save">
+   <property name="text">
+    <string>保存(S)</string>
+   </property>
+  </action>
+  <action name="SaveCopy">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="Reload">
+   <property name="text">
+    <string>重新加载(R)</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

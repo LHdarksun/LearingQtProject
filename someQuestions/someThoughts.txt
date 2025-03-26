@@ -1,0 +1,13 @@
+1.分号分隔符：;; 是Qt文件对话框过滤器的选项分隔符(filter)，每个 ;; 分隔一个可选的过滤条
+
+2.QString(%2 %1).arg(A).arg(B)   其中.arg()中内容用于替代占位符“%N”，其中N表示替换的顺序
+QString QString::arg(
+    double(or otehr types) value, 
+    int fieldWidth = 0, 
+    char format = 'g', 
+    int precision = -1
+) const;
+
+3.ui->...都是要在ui中设计的
+
+4.为check button和line edit添加初始disabled
