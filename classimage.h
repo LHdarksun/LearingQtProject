@@ -24,6 +24,8 @@ private:
     int BinaryThresholdType = THRESH_BINARY;
     int Brightness = 0;
     double ContrastRatio = 1.0;
+    double Saturation = 1.0;
+    int ColdHot = 0;
 
 public:
     //通过getter获取私有变量
@@ -39,9 +41,17 @@ public:
     int getBinaryThreshold() {return BinaryThreshold;}
     int getBinaryThresholdType() {return BinaryThresholdType;}
     int getBrightness() {return Brightness;}
-    int getContrastRatio() {return ContrastRatio;}
+    double getContrastRatio() {return ContrastRatio;}
+    double getSaturation() {return Saturation;}
+    int getColdHot() {return ColdHot;}
 
-    void updateContrastRatio(int contrast){
+    void updateColdHot(int coldhot){
+        ColdHot = coldhot;
+    }
+    void updateSaturation(double saturation){
+        Saturation = saturation;
+    }
+    void updateContrastRatio(double contrast){
         ContrastRatio = contrast;
     }
     void updateBrightness(int bright){

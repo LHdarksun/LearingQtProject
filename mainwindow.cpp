@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     isThresholdTypeSetted = false;
     isRGB = false;
 
+    ColorMapType = COLORMAP_HSV;
+
     histCount = 0;
 
     //选择warpAffine的参数
@@ -86,6 +88,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pBtn_ImgBeforeHist->setEnabled(false);
     ui->pBtn_HistogramEqualizationContrastRatio->setEnabled(false);
     ui->pBtn_GenerateHist->setEnabled(false);
+    ui->pBtn_ImgBeforeSaturation->setEnabled(false);
+    ui->lineEdit_Saturation->setEnabled(false);
+    ui->hzSlider_Saturation->setEnabled(false);
+    ui->pBtn_ImgBeforeColdHot->setEnabled(false);
+    ui->lineEdit_ColdHot->setEnabled(false);
+    ui->hzSlider_ColdHot->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -215,6 +223,85 @@ void MainWindow::on_OpenFile_triggered(){
     showImageFeatures();                                                    //显示图片属性
 }
 
+void MainWindow::on_OpenPseudoColor_triggered(){
+    QString curPath = QDir::currentPath();
+    QString filter = "图片文件(*.bmp *.jpg *.png *.jpeg);;"
+                     "BMP文件(*.bmp);;JPG文件(*.jpg);;PNG文件(*.png);;JPEG文件(*.jpeg)";
+    QString fileName = QFileDialog::getOpenFileName(this,"选择图片文件R(请选择灰度图)",curPath,filter);
+    if (fileName.isEmpty()){
+        QMessageBox::critical(this,"Error!","打卡错误：该图像无法打开，请选择其他图像！");
+        return;
+    }
+    Mat rawImg = imread(fileName.toStdString(),IMREAD_GRAYSCALE);
+
+    Mat FaultColor;
+    applyColorMap(rawImg,FaultColor,ColorMapType);
+
+    m_cvImg_Origin = FaultColor.clone();
+    m_cvImg_Temporary = FaultColor.clone();
+    ImgShow(m_cvImg_Origin);
+    m_qimage_Origin = cvt_Cv2Qimg(m_cvImg_Origin);
+    ui->statusbar->showMessage(fileName);
+    m_filename = fileName;
+    QFileInfo fileInfo(fileName);
+    QDir::setCurrent(fileInfo.absolutePath());
+    ui->ProcFuncWidget->setCurrentIndex(0);
+    ui->radBtn_INTER_LINEAR->setChecked(true);
+    setItemEnabled();
+    showImageFeatures();
+}
+
+void MainWindow::on_OpenFalseColor_triggered(){
+    QString curPath = QDir::currentPath();
+    QString filter = "图片文件(*.bmp *.jpg *.png *.jpeg);;"
+                     "BMP文件(*.bmp);;JPG文件(*.jpg);;PNG文件(*.png);;JPEG文件(*.jpeg)";
+    QString fileName = QFileDialog::getOpenFileName(this,"选择图片文件R(请选择灰度图)",curPath,filter);
+    if (fileName.isEmpty()){
+        QMessageBox::critical(this,"Error!","打卡错误：该图像无法打开，请选择其他图像！");
+        return;
+    }
+    Mat rawImg = imread(fileName.toStdString(),IMREAD_GRAYSCALE);
+    QString fileName_1 = QFileDialog::getOpenFileName(this,"选择图片文件G(请选择灰度图)",curPath,filter);
+    if (fileName_1.isEmpty()){
+        QMessageBox::critical(this,"Error!","打卡错误：该图像无法打开，请选择其他图像！");
+        return;
+    }
+    Mat rawImg_1 = imread(fileName_1.toStdString(),IMREAD_GRAYSCALE);
+    QString fileName_2 =QFileDialog::getOpenFileName(this,"选择图片文件B(请选择灰度图)",curPath,filter);
+    if (fileName_2.isEmpty()){
+        QMessageBox::critical(this,"Error!","打卡错误：该图像无法打开，请选择其他图像！");
+        return;
+    }
+    Mat rawImg_2 = imread(fileName_2.toStdString(),IMREAD_GRAYSCALE);
+
+    Mat PseudoColor;
+    Mat PseudoColor_1;
+    Mat PseudoColor_2;
+    applyColorMap(rawImg,PseudoColor,COLORMAP_HOT);
+    applyColorMap(rawImg_1,PseudoColor_1,COLORMAP_MAGMA);
+    applyColorMap(rawImg,PseudoColor_2,COLORMAP_TURBO);
+
+    Mat dst;
+    vector<Mat> channels;
+    channels[0] = PseudoColor.clone();
+    channels[1] = PseudoColor_1.clone();
+    channels[2] = PseudoColor_2.clone();
+    merge(channels,dst);
+
+    m_cvImg_Origin = dst.clone();
+    m_cvImg_Temporary = dst.clone();
+    ImgShow(m_cvImg_Origin);
+    m_qimage_Origin = cvt_Cv2Qimg(m_cvImg_Origin);
+    ui->statusbar->showMessage(fileName);
+    m_filename = fileName;
+    QFileInfo fileInfo(fileName);
+    QDir::setCurrent(fileInfo.absolutePath());
+    ui->ProcFuncWidget->setCurrentIndex(0);
+    ui->radBtn_INTER_LINEAR->setChecked(true);
+    setItemEnabled();
+    showImageFeatures();
+}
+
 void MainWindow::on_Save_triggered(){
     m_qimage_Temporary = cvt_Cv2Qimg(m_cvImg_Temporary);
     m_qimage_Temporary.save(m_filename);
@@ -247,7 +334,7 @@ void MainWindow::on_Reload_triggered(){
 void MainWindow::reSetParameter(){
     ui->pBtn_cvt_Grayscale2Binary->setEnabled(false);
     ui->AngleEdit->setText(QString("%1").arg(0));
-    ui->ScaleEdit->setText(QString("%1").arg(1.));
+    ui->ScaleEdit->setText(QString("%1").arg(1.0));
     ui->radBtn_INTER_LINEAR->setChecked(true);
     Img.updateAngle(0);
     Img.updateScale(1.);
@@ -259,6 +346,9 @@ void MainWindow::reSetParameter(){
     Img.updateButterWorthN(1);
     Img.updateBinaryThreshold(0);
     Img.updateBinaryThresholdType(THRESH_BINARY);
+    Img.updateBrightness(0);
+    Img.updateContrastRatio(1.0);
+    Img.updateSaturation(1.0);
 }
 
 void MainWindow::imageModified(bool modified){
@@ -319,6 +409,8 @@ void MainWindow::setItemEnabled(){
     ui->radBtn_HSVBrightness->setEnabled(true);
     ui->pBtn_ImgBeforeContrastRatio->setEnabled(true);
     ui->pBtn_ImgBeforeHist->setEnabled(true);
+    ui->pBtn_ImgBeforeSaturation->setEnabled(true);
+    ui->pBtn_ImgBeforeColdHot->setEnabled(true);
 }
 
 
@@ -564,7 +656,7 @@ int MainWindow::Random_uniform_int_distribution(){
  */
 void MainWindow::on_pBtn_GaussNoise_Add_clicked(){
     Mat src = m_cvImg_Temporary.clone();
-    m_cvImg_BeforeNoise = m_cvImg_Temporary.clone();
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
     Mat noise = Mat::zeros(src.size(),src.type());
     if (noise.channels() == 1){
         randn(noise,25,30);
@@ -586,7 +678,7 @@ void MainWindow::on_pBtn_GaussNoise_Add_clicked(){
  */
 void MainWindow::on_pBtn_ImpulseNoise_Add_clicked(){
     Mat src = m_cvImg_Temporary.clone();
-    m_cvImg_BeforeNoise = m_cvImg_Temporary.clone();
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
     Mat noiseImg = Mat::zeros(src.size(),src.type());
     int seed = Random_uniform_int_distribution();
     RNG rng(seed);
@@ -635,7 +727,7 @@ void MainWindow::on_pBtn_ImpulseNoise_Add_clicked(){
 void MainWindow::medianBlur_Del(){
     Mat src = m_cvImg_Temporary.clone();
     Mat dst;
-    m_cvImg_BeforeNoise = m_cvImg_Temporary.clone();
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
     medianBlur(src,dst,Img.getSizeofRect());
     m_cvImg_Temporary = dst.clone();
     ImgShow(m_cvImg_Temporary);
@@ -686,117 +778,7 @@ void MainWindow::on_radBtn_ButterWorthLowPass_Filter_clicked(){
     Img.updatelpFilterType(1);
 }
 
-/*void MainWindow::FourierTransform(){
-    vector<Mat> bgrChannels;
-    split(m_cvImg_Temporary,bgrChannels);
-    vector<Mat> filteredChannels;
-
-    for (int i=0;i<3;i++){
-        realName = QFileInfo(m_filename).baseName();
-        Mat channel = bgrChannels[i];
-        //channel.convertTo(channel,CV_32F);
-        m_qimg_Channel = cvt_Cv2Qimg(channel);
-        m_qimg_Channel.save(QString(realName + "_bgrChannel_%1.png").arg(i));
-
-        //拓展图像为DFT推荐尺寸
-        Mat Padded;
-        int r = channel.rows;
-        int c = channel.cols;
-        int m = getOptimalDFTSize(r);
-        int n = getOptimalDFTSize(c);
-        copyMakeBorder(channel,Padded,0,n,0,m,BORDER_CONSTANT,Scalar::all(0));
-        Padded.convertTo(Padded,CV_32F);
-        //在生成Padded后convert？
-        m_qimg_Channel = cvt_Cv2Qimg(Padded);
-        m_qimg_Channel.save(QString(realName + "_bgrPadded_%1.png").arg(i));
-
-        //创建滤波器
-        Point center;
-        center.y = Padded.rows / 2;
-        center.x = Padded.cols / 2;
-        Mat lpFilter = createLPFilter(Padded.size(),center,Img.getRadius(),Img.getlpFilterType(),Img.getButterWorthN());
-
-        //创建复数矩阵
-        Mat planes[] = {Mat_<float> (Padded), Mat::zeros(Padded.size(),CV_32F)};
-        Mat planesMag[] = {Mat_<float> (Padded), Mat::zeros(Padded.size(),CV_32F)};   //用于幅度谱计算
-        Mat complexImg;
-        merge(planes,2,complexImg);
-
-        m_qimg_Channel = cvt_Cv2Qimg(complexImg);
-        m_qimg_Channel.save(QString(realName + "_bgrComplex_%1.png").arg(i));
-
-        //执行傅里叶变换
-        dft(complexImg,complexImg);
-
-        //计算幅度谱
-        Mat magnitudeSpectrum;
-        split(complexImg,planes);
-        planes[1].clone().convertTo(planesMag[1],CV_32F);
-        magnitude(planesMag[0],planesMag[1],magnitudeSpectrum);
-        magnitudeSpectrum += Scalar::all(1);
-        log(magnitudeSpectrum,magnitudeSpectrum);
-
-        normalize(magnitudeSpectrum,magnitudeSpectrum,0,255,NORM_MINMAX);
-        Mat magU8;
-        magnitudeSpectrum.convertTo(magU8,CV_8U);
-
-        //象限平移（低频移到中心）
-        int cx = magU8.cols / 2;
-        int cy = magU8.rows / 2;
-        Mat quadrant1 = magU8(Rect(0,0,cx,cy));
-        Mat quadrant2 = magU8(Rect(cx,0,cx,cy));
-        Mat quadrant3 = magU8(Rect(0,cy,cx,cy));
-        Mat quadrant4 = magU8(Rect(cx,cy,cx,cy));
-
-        Mat temp;
-        temp = quadrant1.clone();
-        quadrant4.copyTo(quadrant1);
-        temp.copyTo(quadrant4);
-
-        temp = quadrant2.clone();
-        quadrant3.copyTo(quadrant2);
-        temp.copyTo(quadrant3);
-
-        //保存幅度谱图像
-        m_qimg_DFT = cvt_Cv2Qimg(magU8);
-        m_qimg_DFT.save(QString(realName + "_MagnitudeSpectrum_%1.png").arg(i));
-
-        //应用滤波器
-        multiply(planes[0],lpFilter,planes[0]);
-        multiply(planes[1],lpFilter,planes[1]);
-        merge(planes,2,complexImg);
-
-        //逆傅里叶变换
-        Mat inverseTransform;
-        dft(complexImg,inverseTransform,DFT_INVERSE | DFT_REAL_OUTPUT);
-
-        m_qimg_DFT = cvt_Cv2Qimg(inverseTransform);
-        m_qimg_DFT.save(QString(realName + "_inverseTransform_%1.png").arg(i));
-
-        //归一化
-        Mat reconstructed;
-        normalize(inverseTransform,reconstructed,0,255,NORM_MINMAX);
-        reconstructed.convertTo(reconstructed,CV_8UC1);
-
-        m_qimg_DFT = cvt_Cv2Qimg(reconstructed);
-        m_qimg_DFT.save(QString(realName + "_reconstructed_%1.png").arg(i));
-
-        //裁剪区域至原大小
-        Mat finalChannel = reconstructed(Rect(0,0,c,r));
-
-        filteredChannels.push_back(finalChannel);
-
-        m_qimg_DFT = cvt_Cv2Qimg(filteredChannels[i]);
-        m_qimg_DFT.save(QString(realName + "_bgrFiltered_%1.png").arg(i));
-    }
-
-    Mat finalImg;
-    merge(filteredChannels,finalImg);
-    m_cvImg_Temporary = finalImg.clone();
-    ImgShow(m_cvImg_Temporary);
-}*/
-
-//还没写出来
+/*这是我自己写的错误代码
 void MainWindow::FourierTransform(){
     //一、得实矩阵
     Mat cvImg_In = m_cvImg_Temporary.clone();
@@ -806,7 +788,7 @@ void MainWindow::FourierTransform(){
     int c = cvImg_In.cols;
     split(cvImg_In,channelsIn);
     for (int i=0;i<3;i++){
-        channelsReal[i] = channelsIn[i] * pow(-1,(r+c));
+        channelsReal[i] = channelsIn[i] * pow(-1,(r+c % 2 == 1 ? 1 : 2));
     }
     Mat cvImg_Real;
     merge(channelsReal,cvImg_Real);
@@ -887,11 +869,66 @@ void MainWindow::FourierTransform(){
     vector<Mat> channelsFinal(3);
     split(cvImg_Reconstructed,channelsFinal);
     for (int i=0;i<3;i++){
-        channelsFinal[i] = channelsReconstructed[i] * pow(-1,(r+c));
+        channelsFinal[i] = channelsReconstructed[i] * pow(-1,(r+c % 2 == 1 ? 1 : 2));
     }
     merge(channelsFinal,cvImg_Final);
 
     m_cvImg_Temporary = cvImg_Final.clone();
+    ImgShow(m_cvImg_Temporary);
+}
+*/
+
+//AI跑的
+void MainWindow::FourierTransform() {
+    // 输入图像处理
+    Mat cvImg_In = m_cvImg_Temporary.clone();
+    if (cvImg_In.channels() > 1) {
+        cvtColor(cvImg_In, cvImg_In, COLOR_BGR2GRAY);
+    }
+    cvImg_In.convertTo(cvImg_In, CV_32F);
+
+    // 中心化
+    Mat shiftMat = Mat::zeros(cvImg_In.size(), CV_32F);
+    for (int y = 0; y < cvImg_In.rows; y++) {
+        for (int x = 0; x < cvImg_In.cols; x++) {
+            shiftMat.at<float>(y, x) = ((x + y) % 2 == 0) ? 1 : -1;
+        }
+    }
+    multiply(cvImg_In, shiftMat, cvImg_In);
+
+    // 扩展图像
+    Mat padded;
+    int optRows = getOptimalDFTSize(cvImg_In.rows);
+    int optCols = getOptimalDFTSize(cvImg_In.cols);
+    copyMakeBorder(cvImg_In, padded, 0, optRows - cvImg_In.rows, 0, optCols - cvImg_In.cols, BORDER_CONSTANT, Scalar::all(0));
+
+    // 傅里叶变换
+    Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
+    Mat complexImg;
+    merge(planes, 2, complexImg);
+    dft(complexImg, complexImg);
+
+    // 创建滤波器
+    Mat lpFilter = createLPFilter(complexImg.size(), Point(complexImg.cols/2, complexImg.rows/2), Img.getRadius(), Img.getlpFilterType(), Img.getButterWorthN());
+
+    // 应用滤波器
+    Mat filteredPlanes[2];
+    split(complexImg, filteredPlanes);
+    multiply(filteredPlanes[0], lpFilter, filteredPlanes[0]);
+    multiply(filteredPlanes[1], lpFilter, filteredPlanes[1]);
+    merge(filteredPlanes, 2, complexImg);
+
+    // 逆变换
+    dft(complexImg, complexImg, DFT_INVERSE | DFT_REAL_OUTPUT);
+
+    // 裁剪和去中心化
+    Mat result = complexImg(Rect(0, 0, cvImg_In.cols, cvImg_In.rows));
+    multiply(result, shiftMat, result); // 再次中心化还原
+
+    // 归一化显示
+    normalize(result, result, 0, 255, NORM_MINMAX);
+    result.convertTo(result, CV_8U);
+    m_cvImg_Temporary = result.clone();
     ImgShow(m_cvImg_Temporary);
 }
 
@@ -1083,7 +1120,7 @@ void MainWindow::on_hzSlider_Brightness_sliderMoved(int position){
 }
 
 void MainWindow::on_pBtn_ImgBeforeBrightness_clicked(){
-    m_cvImg_BeforeBrightness = m_cvImg_Temporary.clone();
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
     ui->hzSlider_Brightness->setEnabled(true);
     ui->lineEdit_Brightness->setEnabled(true);
 }
@@ -1091,7 +1128,7 @@ void MainWindow::on_pBtn_ImgBeforeBrightness_clicked(){
 void MainWindow::addBrightness(){
     Mat hsv;
     Mat dst;
-    Mat src = m_cvImg_BeforeBrightness.clone();
+    Mat src = m_cvImg_BeforeChange.clone();
     vector<Mat> channels;
     int brightness = Img.getBrightness();
 
@@ -1152,13 +1189,13 @@ void MainWindow::on_radBtn_HSVBrightness_clicked(){
 }
 
 void MainWindow::on_pBtn_ImgBeforeContrastRatio_clicked(){
-    m_cvImg_BeforeContrastRatio = m_cvImg_Temporary.clone();
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
     ui->hzSlider_ContrastRatio->setEnabled(true);
     ui->lineEdit_ContrastRatio->setEnabled(true);
 }
 
 void MainWindow::addContrastRatioDirectly(){
-    Mat src = m_cvImg_BeforeContrastRatio.clone();
+    Mat src = m_cvImg_BeforeChange.clone();
     Mat dst;
     Mat dst8u;
     double contrastRatio = Img.getContrastRatio();
@@ -1182,24 +1219,42 @@ void MainWindow::on_lineEdit_ContrastRatio_editingFinished(){
 }
 
 void MainWindow::on_hzSlider_ContrastRatio_sliderMoved(int position){
-    ui->lineEdit_ContrastRatio->setText(QString::number(double(position)/100,'f',2));
-    Img.updateContrastRatio(double(position/100));
-    qDebug() << Img.getContrastRatio();
+    ui->lineEdit_ContrastRatio->setText(QString::number(position/100.0,'f',2));
+    Img.updateContrastRatio(position/100.0);
     addContrastRatioDirectly();
 }
 
 void MainWindow::on_pBtn_ImgBeforeHist_clicked(){
-    m_cvImg_BeforeHist = m_cvImg_Temporary.clone();
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
     ui->pBtn_HistogramEqualizationContrastRatio->setEnabled(true);
     ui->pBtn_GenerateHist->setEnabled(true);
 }
 
 void MainWindow::on_pBtn_HistogramEqualizationContrastRatio_clicked(){
-    Mat src = m_cvImg_BeforeHist.clone();
+    Mat src = m_cvImg_BeforeChange.clone();
     Mat dst;
-
-    equalizeHist(src,dst);
-
+    vector<Mat> Channels;
+    Mat hsv;
+    Mat histed;
+    if (src.channels() == 1){
+        equalizeHist(src,dst);
+    }
+    else if (src.channels() == 3 && isRGB){
+        cvtColor(src,hsv,COLOR_RGB2HSV);
+        split(hsv,Channels);
+        equalizeHist(Channels[2],histed);
+        Channels[2] = histed.clone();
+        merge(Channels,hsv);
+        cvtColor(hsv,dst,COLOR_HSV2RGB);
+    }
+    else if (src.channels() == 3 && !isRGB){
+        cvtColor(src,hsv,COLOR_BGR2HSV);
+        split(hsv,Channels);
+        equalizeHist(Channels[2],histed);
+        Channels[2] = histed.clone();
+        merge(Channels,hsv);
+        cvtColor(hsv,dst,COLOR_HSV2BGR);
+    }
     m_cvImg_Temporary = dst.clone();
     ImgShow(m_cvImg_Temporary);
 }
@@ -1239,4 +1294,145 @@ void MainWindow::on_pBtn_GenerateHist_clicked(){
     histCount++;
     m_qimg_MagnitudeSpectrum = cvt_Cv2Qimg(histImage);
     m_qimg_MagnitudeSpectrum.save(QString(realName + "_histImage_%1.png").arg(histCount));
+}
+void MainWindow::on_pBtn_ImgBeforeSaturation_clicked(){
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
+    ui->lineEdit_Saturation->setEnabled(true);
+    ui->hzSlider_Saturation->setEnabled(true);
+}
+
+void MainWindow::changeSaturation(){
+    Mat src = m_cvImg_BeforeChange.clone();
+    Mat hsv;
+    Mat dst;
+    vector<Mat> Channels;
+    double saturation = Img.getSaturation();
+
+    if (src.channels() == 1){
+        QMessageBox::critical(this,"Error!","编辑错误：灰度图无法改变饱和度!");
+        return;
+    }
+    else if (src.channels() == 3 && isRGB){
+        cvtColor(src,hsv,COLOR_RGB2HSV);
+        split(hsv,Channels);
+        for (int i=0;i<Channels[1].rows;i++){
+            for (int j=0;j<Channels[1].cols;j++){
+                Channels[1].at<uchar>(i,j) *= saturation;
+            }
+        }
+        merge(Channels,hsv);
+        cvtColor(hsv,dst,COLOR_HSV2RGB);
+    }
+    else if (src.channels() == 3 && !isRGB){
+        cvtColor(src,hsv,COLOR_BGR2HSV);
+        split(hsv,Channels);
+        for (int i=0;i<Channels[1].rows;i++){
+            for (int j=0;j<Channels[1].cols;j++){
+                Channels[1].at<uchar>(i,j) *= saturation;
+            }
+        }
+        merge(Channels,hsv);
+        cvtColor(hsv,dst,COLOR_HSV2BGR);
+    }
+
+    m_cvImg_Temporary = dst;
+    ImgShow(m_cvImg_Temporary);
+}
+
+void MainWindow::on_lineEdit_Saturation_editingFinished(){
+    QString saturationString = ui->lineEdit_Saturation->text();
+    double saturation = saturationString.toDouble();
+    if (saturation > 3.0 || saturation < 0.0){
+        QMessageBox::critical(this,"Error!","输入失败：饱和度范围应为0-3");
+        ui->lineEdit_Saturation->setText("1.0");
+        return;
+    }
+    Img.updateSaturation(saturation);
+    ui->hzSlider_Saturation->setValue(int(saturation*100));
+    changeSaturation();
+}
+
+void MainWindow::on_hzSlider_Saturation_sliderMoved(int position){
+    ui->lineEdit_Saturation->setText(QString::number(position/100.0,'f',2));
+    Img.updateSaturation(position/100.0);
+    changeSaturation();
+}
+
+void MainWindow::on_pBtn_ImgBeforeColdHot_clicked(){
+    m_cvImg_BeforeChange = m_cvImg_Temporary.clone();
+    ui->lineEdit_ColdHot->setEnabled(true);
+    ui->hzSlider_ColdHot->setEnabled(true);
+}
+
+void MainWindow::changeColdHot(){
+    Mat src = m_cvImg_BeforeChange.clone();
+    Mat dst;
+    int coldHot = Img.getColdHot();
+
+    if (src.channels() == 1){
+        QMessageBox::critical(this,"Error!","编辑错误：灰度图无法调整冷暖色调！");
+        return;
+    }
+    else if (src.channels() == 3 && isRGB){
+        add(src,Scalar(coldHot*0.587,coldHot*0.299,coldHot*0.144),dst);
+    }
+    else if (src.channels() == 3 && !isRGB){
+        add(src,Scalar(coldHot*0.144,coldHot*0.299,coldHot*0.587),dst);
+    }
+
+    m_cvImg_Temporary = dst.clone();
+    ImgShow(m_cvImg_Temporary);
+}
+
+void MainWindow::on_lineEdit_ColdHot_editingFinished(){
+    QString coldHotString = ui->lineEdit_ColdHot->text();
+    int coldHot = coldHotString.toInt();
+    Img.updateColdHot(coldHot);
+    ui->hzSlider_ColdHot->setValue(coldHot);
+    changeColdHot();
+}
+
+void MainWindow::on_hzSlider_ColdHot_sliderMoved(int position){
+    ui->lineEdit_ColdHot->setText(QString("%1").arg(position));
+    Img.updateColdHot(position);
+    changeColdHot();
+}
+
+void MainWindow::chooseColorMapType(){
+    if (ui->radBtn_ColorMap_Autumn->isChecked())
+        ColorMapType = COLORMAP_AUTUMN;
+    else if (ui->radBtn_ColorMap_Magma->isChecked())
+        ColorMapType = COLORMAP_MAGMA;
+    else if (ui->radBtn_ColorMap_Winter->isChecked())
+        ColorMapType = COLORMAP_WINTER;
+    else if (ui->radBtn_ColorMap_Spring->isChecked())
+        ColorMapType = COLORMAP_SPRING;
+    else if (ui->radBtn_ColorMap_HSV->isChecked())
+        ColorMapType = COLORMAP_HSV;
+
+    ui->OpenFalseColor->setEnabled(true);
+}
+
+void MainWindow::on_radBtn_ColorMap_Autumn_clicked(){
+    chooseColorMapType();
+}
+
+void MainWindow::on_radBtn_ColorMap_Magma_clicked(){
+    chooseColorMapType();
+}
+
+void MainWindow::on_radBtn_ColorMap_Winter_clicked(){
+    chooseColorMapType();
+}
+
+void MainWindow::on_radBtn_ColorMap_DeepGreen_clicked(){
+    chooseColorMapType();
+}
+
+void MainWindow::on_radBtn_ColorMap_Spring_clicked(){
+    chooseColorMapType();
+}
+
+void MainWindow::on_radBtn_ColorMap_HSV_clicked(){
+    chooseColorMapType();
 }

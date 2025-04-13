@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="SimpleGeomTrans">
      <attribute name="title">
@@ -797,7 +797,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>30</y>
         <width>370</width>
         <height>550</height>
        </rect>
@@ -821,15 +821,15 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-154</y>
+         <y>0</y>
          <width>358</width>
-         <height>800</height>
+         <height>1020</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>800</height>
+         <height>1020</height>
         </size>
        </property>
        <widget class="QGroupBox" name="groupBox">
@@ -1057,7 +1057,7 @@
           <x>10</x>
           <y>240</y>
           <width>340</width>
-          <height>431</height>
+          <height>600</height>
          </rect>
         </property>
         <property name="font">
@@ -1327,7 +1327,7 @@
            <rect>
             <x>10</x>
             <y>80</y>
-            <width>141</width>
+            <width>150</width>
             <height>18</height>
            </rect>
           </property>
@@ -1341,13 +1341,291 @@
           </property>
          </widget>
         </widget>
+        <widget class="QFrame" name="frame_8">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>380</y>
+           <width>320</width>
+           <height>101</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <widget class="QLabel" name="label_25">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>100</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>饱和度:</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Saturation">
+          <property name="geometry">
+           <rect>
+            <x>210</x>
+            <y>10</y>
+            <width>100</width>
+            <height>20</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QSlider" name="hzSlider_Saturation">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>300</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="maximum">
+           <number>300</number>
+          </property>
+          <property name="sliderPosition">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pBtn_ImgBeforeSaturation">
+          <property name="geometry">
+           <rect>
+            <x>89</x>
+            <y>70</y>
+            <width>140</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>锁定饱和度变化前的图像</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QFrame" name="frame_9">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>490</y>
+           <width>320</width>
+           <height>101</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <widget class="QLabel" name="label_27">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>80</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>冷暖色调：</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pBtn_ImgBeforeColdHot">
+          <property name="geometry">
+           <rect>
+            <x>90</x>
+            <y>70</y>
+            <width>141</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>锁定冷暖变换前图像</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_ColdHot">
+          <property name="geometry">
+           <rect>
+            <x>210</x>
+            <y>10</y>
+            <width>100</width>
+            <height>20</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QSlider" name="hzSlider_ColdHot">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>300</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="minimum">
+           <number>-255</number>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>850</y>
+          <width>340</width>
+          <height>140</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="title">
+         <string>伪彩色图像对应COLORMAP选择：</string>
+        </property>
+        <widget class="QRadioButton" name="radBtn_ColorMap_Autumn">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>30</y>
+           <width>73</width>
+           <height>18</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Autumn</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="radBtn_ColorMap_Winter">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>60</y>
+           <width>73</width>
+           <height>18</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Winter</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="radBtn_ColorMap_Spring">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>90</y>
+           <width>73</width>
+           <height>18</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Spring</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="radBtn_ColorMap_Magma">
+         <property name="geometry">
+          <rect>
+           <x>230</x>
+           <y>30</y>
+           <width>73</width>
+           <height>18</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Magma</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="radBtn_ColorMap_DeepGreen">
+         <property name="geometry">
+          <rect>
+           <x>230</x>
+           <y>60</y>
+           <width>73</width>
+           <height>18</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>DeepGreen</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="radBtn_ColorMap_HSV">
+         <property name="geometry">
+          <rect>
+           <x>230</x>
+           <y>90</y>
+           <width>73</width>
+           <height>18</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>HSV</string>
+         </property>
+        </widget>
        </widget>
       </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
-      <string>页</string>
+      <string>特效</string>
      </attribute>
     </widget>
    </widget>
@@ -1741,27 +2019,13 @@
      <string>文件</string>
     </property>
     <addaction name="OpenFile"/>
-    <addaction name="RecentFile"/>
     <addaction name="separator"/>
     <addaction name="Save"/>
     <addaction name="SaveCopy"/>
-    <addaction name="separator"/>
     <addaction name="Reload"/>
-   </widget>
-   <widget class="QMenu" name="Edit">
-    <property name="title">
-     <string>编辑</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="Layer">
-    <property name="title">
-     <string>图层</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="Filter">
-    <property name="title">
-     <string>滤镜</string>
-    </property>
+    <addaction name="separator"/>
+    <addaction name="OpenPseudoColor"/>
+    <addaction name="OpenFalseColor"/>
    </widget>
    <widget class="QMenu" name="Help">
     <property name="title">
@@ -1769,9 +2033,6 @@
     </property>
    </widget>
    <addaction name="File"/>
-   <addaction name="Edit"/>
-   <addaction name="Layer"/>
-   <addaction name="Filter"/>
    <addaction name="Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -1804,6 +2065,16 @@
   <action name="Reload">
    <property name="text">
     <string>重新加载(R)</string>
+   </property>
+  </action>
+  <action name="OpenPseudoColor">
+   <property name="text">
+    <string>打开伪彩色图像</string>
+   </property>
+  </action>
+  <action name="OpenFalseColor">
+   <property name="text">
+    <string>打开假彩色图像</string>
    </property>
   </action>
  </widget>

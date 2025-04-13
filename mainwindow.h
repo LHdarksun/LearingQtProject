@@ -32,10 +32,7 @@ private:                                                //
     QImage m_qimg_MagnitudeSpectrum;
     Mat m_cvImg_Origin;
     Mat m_cvImg_Temporary;
-    Mat m_cvImg_BeforeNoise;
-    Mat m_cvImg_BeforeBrightness;
-    Mat m_cvImg_BeforeContrastRatio;
-    Mat m_cvImg_BeforeHist;
+    Mat m_cvImg_BeforeChange;
     ClassImage Img;
     bool isButterWorthNSetted;
     bool isRadiusSetted;
@@ -44,6 +41,7 @@ private:                                                //
     bool isRGB;
     int AddBrightnessType;
     int histCount;
+    int ColorMapType;
     int Random_uniform_int_distribution();
     QImage cvt_Cv2Qimg(Mat m_cvImg);
     void showImageFeatures(bool formatChanged=true, bool origin=false);    //
@@ -68,6 +66,9 @@ private:                                                //
     void addContrastRatioDirectly();
     void addContrastRatioHist();
     void chooseAddBrightnessType();
+    void changeSaturation();
+    void changeColdHot();
+    void chooseColorMapType();
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -79,6 +80,8 @@ private slots:
     void on_Save_triggered();
     void on_SaveCopy_triggered();
     void on_Reload_triggered();
+    void on_OpenPseudoColor_triggered();
+    void on_OpenFalseColor_triggered();
 
     //旋转功能
     void on_LeftRotate_clicked();
@@ -133,6 +136,19 @@ private slots:
     void on_pBtn_HistogramEqualizationContrastRatio_clicked();
     void on_pBtn_ImgBeforeHist_clicked();
     void on_pBtn_GenerateHist_clicked();
+    void on_pBtn_ImgBeforeSaturation_clicked();
+    void on_lineEdit_Saturation_editingFinished();
+    void on_hzSlider_Saturation_sliderMoved(int position);
+    void on_pBtn_ImgBeforeColdHot_clicked();
+    void on_lineEdit_ColdHot_editingFinished();
+    void on_hzSlider_ColdHot_sliderMoved(int position);
+
+    void on_radBtn_ColorMap_Autumn_clicked();
+    void on_radBtn_ColorMap_Magma_clicked();
+    void on_radBtn_ColorMap_Winter_clicked();
+    void on_radBtn_ColorMap_DeepGreen_clicked();
+    void on_radBtn_ColorMap_Spring_clicked();
+    void on_radBtn_ColorMap_HSV_clicked();
 private:
     Ui::MainWindow *ui;
 };
